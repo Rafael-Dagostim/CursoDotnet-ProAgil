@@ -31,6 +31,7 @@ namespace proAgil
             services.AddDbContext<DataContext>(
                 x => x.UseSqlite(Configuration.GetConnectionString("DefaultConnection"))
             );
+            services.AddCors();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -48,7 +49,14 @@ namespace proAgil
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "proAgil v1"));
             }
 
-            app.UseHttpsRedirection();
+            app.UseCors(options => 
+                options
+                .AllowAnyHeader()
+                .AllowAnyOrigin()
+                .AllowAnyHeader()
+            );
+
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
 
