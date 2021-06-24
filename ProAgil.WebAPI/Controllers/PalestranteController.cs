@@ -1,6 +1,11 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using ProAgil.Domain;
 using ProAgil.Repository;
 
@@ -8,21 +13,21 @@ namespace ProAgil.WebAPI.Controllers
 {
   [ApiController]
   [Route("api/[Controller]")]
-  public class EventoController : ControllerBase
+  public class PalestranteController : ControllerBase
   {
     private readonly IProAgilRepository _repo;
 
-    public EventoController(IProAgilRepository repo)
+    public PalestranteController(IProAgilRepository repo)
     {
       _repo = repo;
     }
 
     [HttpGet]
-    public async Task<IActionResult> Get()
+    public async Task<IActionResult> Get(string name)
     {
       try
       {
-        var results = await _repo.GetAllEventoAsync(true);
+        var results = await _repo.GetAllPalestranteAsyncByName(name, true);
         return Ok(results);
       }
       catch (Exception error)
@@ -31,26 +36,12 @@ namespace ProAgil.WebAPI.Controllers
       }
     }
 
-    [HttpGet("{EventoId}")]
-    public async Task<IActionResult> Get(int EventoId)
+    [HttpGet("{PalestranteId}")]
+    public async Task<IActionResult> Get(int PalestranteId)
     {
       try
       {
-        var results = await _repo.GetEventoAsyncById(EventoId, true);
-        return Ok(results);
-      }
-      catch (Exception error)
-      {
-        return BadRequest("Sistema Falhou: " + error.Message);
-      }
-    }
-
-    [HttpGet("getByTema/{Tema}")]
-    public async Task<IActionResult> Get(string tema)
-    {
-      try
-      {
-        var results = await _repo.GetAllEventoAsyncByTema(tema, true);
+        var results = await _repo.GetPalestranteAsyncId(PalestranteId, true);
         return Ok(results);
       }
       catch (Exception error)
@@ -60,14 +51,14 @@ namespace ProAgil.WebAPI.Controllers
     }
 
     [HttpPost]
-    public async Task<IActionResult> Post([FromBody] Evento model)
+    public async Task<IActionResult> Post([FromBody] Palestrante model)
     {
       try
       {
         _repo.Add(model);
         if (await _repo.SaveChangesAsync())
         {
-          return Created($"/api/evento/{model.Id}", model);
+          return Created($"/api/palestrante/{model.Id}", model);
         }
       }
       catch (Exception error)
@@ -79,11 +70,11 @@ namespace ProAgil.WebAPI.Controllers
     }
 
     [HttpPut]
-    public async Task<IActionResult> Put(int eventoId, [FromBody] Evento model)
+    public async Task<IActionResult> Put(int palestranteId, [FromBody] Palestrante model)
     {
       try
       {
-        var evento = _repo.GetEventoAsyncById(eventoId, false);
+        var evento = _repo.GetEventoAsyncById(palestranteId, false);
         if(evento == null) return NotFound();
         _repo.Update(model);
         if (await _repo.SaveChangesAsync())

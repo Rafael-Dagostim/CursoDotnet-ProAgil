@@ -111,7 +111,7 @@ namespace ProAgil.Repository
       return await query.ToArrayAsync();
     }
 
-    public async Task<Palestrante> GetPalestranteAsync(int PalestranteId, bool includeEvento = false )
+    public async Task<Palestrante> GetPalestranteAsyncId(int PalestranteId, bool includeEvento = false )
     {
       IQueryable<Palestrante> query = _context.Palestentes
         .Include(x => x.RedesSociais);

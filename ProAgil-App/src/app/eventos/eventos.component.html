@@ -1,10 +1,58 @@
-<h2>
-  Eventos works!
-</h2>
-
-<div *ngFor='let evento of eventos'>
-  Tema: {{evento.tema}}
-  <br>
-  Local: {{evento.local}}
-  <hr>
+<h2>ProAgil Eventos</h2>
+<div class="form-inline">
+  <div class="form-group mb-2">
+    Filtrar: &nbsp;
+    <input 
+    type="text" 
+    class="form-control mr-2" 
+    placeholder="Buscar" 
+    [(ngModel)]="filtroLista"/>
+  </div>
 </div>
+<h3>Filtro: {{filtroLista}}</h3>
+<table class="table table-striped">
+  <thead class="thead-light">
+    <tr>
+      <th>
+        <button (click)="alternarImagem()" class="btn btn-outline-primary">
+          Mostrar Imagem
+        </button>
+      </th>
+      <th>#</th>
+      <th>Tema</th>
+      <th>Local</th>
+      <th>Data</th>
+      <th>Qtd Pessoas</th>
+      <th>Lote</th>
+      <th>Opções</th>
+    </tr>
+  </thead>
+  <tbody *ngIf="eventos && eventos.length">
+    <tr *ngFor="let evento of eventosFiltrados">
+      <td>
+        <img
+          *ngIf="mostrarImagem"
+          src="http://localhost:5000/img/{{ evento.imagemUrl }}"
+          [style.width.px]="imagemAltura"
+          [style.margin.px]="imagemMargem"
+        />
+      </td>
+      <td>{{ evento.id }}</td>
+      <td>{{ evento.tema }}</td>
+      <td>{{ evento.local }}</td>
+      <td>{{ evento.dataEvento | date }}</td>
+      <td>{{ evento.qtdPessoas }}</td>
+      <td>
+        <div *ngFor="let lote of evento.lotes">{{lote.nome | uppercase}}</div>
+      </td>
+      <td></td>
+    </tr>
+  </tbody>
+  <tfoot *ngIf="!eventos.length">
+    <tr>
+      <td colspan="7" class="text-center">
+        <h4>Nenhum evento encontrado!</h4>
+      </td>
+    </tr>
+  </tfoot>
+</table>
